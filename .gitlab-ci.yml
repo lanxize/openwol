@@ -29,8 +29,9 @@ Build_Release:
     - chmod +x ./gradlew
     - ./gradlew assembleRelease -Pandroid.injected.signing.store.file="$PWD/jcardoux.jks" -Pandroid.injected.signing.store.password="$KEYSTORE_PASSWORD" -Pandroid.injected.signing.key.alias="$KEY_ALIAS" -Pandroid.injected.signing.key.password="$KEY_PASSWORD"
     - cp app/build/outputs/apk/release/app-release.apk OpenWOL.apk
+    - VERSION_NAME=$(grep 'versionName' app/build.gradle.kts | head -1 | sed 's/.*"\(.*\)".*/\1/')
     # Upload to Registry (History)
-    - "curl --header \"JOB-TOKEN: $CI_JOB_TOKEN\" --upload-file OpenWOL.apk \"${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/openwol/${CI_PIPELINE_IID}/OpenWOL.apk\""
+    - "curl --header \"JOB-TOKEN: $CI_JOB_TOKEN\" --upload-file OpenWOL.apk \"${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/openwol/${VERSION_NAME}/OpenWOL.apk\""
     # Upload to Registry (Latest - for README button)
     - "curl --header \"JOB-TOKEN: $CI_JOB_TOKEN\" --upload-file OpenWOL.apk \"${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/openwol/latest/OpenWOL.apk\""
     # Create tag and release via GitLab API (replaces deprecated release-cli)
@@ -38,7 +39,7 @@ Build_Release:
       curl --fail \
         --header "JOB-TOKEN: $CI_JOB_TOKEN" \
         --header "Content-Type: application/json" \
-        --data "{\"name\":\"Release v${CI_PIPELINE_IID}\",\"tag_name\":\"v${CI_PIPELINE_IID}\",\"ref\":\"${CI_COMMIT_SHA}\",\"description\":\"Automated release from the release branch. Build ID: ${CI_PIPELINE_IID}\",\"assets\":{\"links\":[{\"name\":\"Download OpenWOL APK\",\"url\":\"${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/openwol/${CI_PIPELINE_IID}/OpenWOL.apk\"}]}}" \
+        --data "{\"name\":\"Release v${VERSION_NAME}\",\"tag_name\":\"v${VERSION_NAME}\",\"ref\":\"${CI_COMMIT_SHA}\",\"description\":\"Automated release from the release branch.\",\"assets\":{\"links\":[{\"name\":\"Download OpenWOL APK\",\"url\":\"${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/openwol/${VERSION_NAME}/OpenWOL.apk\"}]}}" \
         "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/releases"
   artifacts:
     paths:

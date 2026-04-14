@@ -27,6 +27,10 @@ class AutomationService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+        if (!hasLocationPermissions(this)) {
+            stopSelf()
+            return
+        }
         createNotificationChannels()
         startForegroundCompat()
         registerNetworkCallback()
