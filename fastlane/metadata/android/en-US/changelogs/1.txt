@@ -1,0 +1,5 @@
+Wake-on-LAN base app
+Automations: automatically wake devices when connecting to a specific Wi-Fi network
+Optional push notification when an automation is triggered
+Advanced network settings: custom IP address and subnet mask per device
+UI improvements and bug fixes

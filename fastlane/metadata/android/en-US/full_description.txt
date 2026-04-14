@@ -1,0 +1,26 @@
+<b>OpenWOL</b> is a simple, private and efficient Wake-on-LAN app for Android.
+
+Send a Magic Packet to any device on your local network with a single tap. No account, no cloud, no tracking — everything stays on your device and your local network.
+
+<b>FEATURES</b>
+
+- Send Wake-on-LAN Magic Packets to wake up devices on your local network
+- Create automations to trigger a wake up command on a specific SSID (WiFi) connection
+- Notify (if enabled) when an automation is triggered
+- Privacy first: no tracking, no ads, zero data collection and fully open-source
+- No network scanning & no background pings
+- Simple and straight to the point app
+
+<b>PERMISSIONS</b>
+
+Location permissions (ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION, ACCESS_BACKGROUND_LOCATION) are used exclusively to read the Wi-Fi network name (SSID) in order to trigger automations. Android requires these permissions to access the SSID. No location data is ever collected, stored, or shared. These permissions are only requested when the user enables the optional Automations feature.
+
+<b>SETUP</b>
+
+1. Enable Wake-on-LAN in your device's BIOS (look for "Wake on Magic Packet" or "Power On By PCI-E").
+2. On Windows, enable "Wake on Magic Packet" in Device Manager under your network adapter's Advanced properties.
+3. Add your device in OpenWOL and tap its card to send a Magic Packet.
+4. Optionally, create an Automation to wake your device automatically when connecting to your home Wi-Fi.
+
+<b>PRIVACY</b>
+OpenWOL collects no data. There are no analytics, no ads, no trackers. Location permissions are used only to read the Wi-Fi SSID for automations, no location data is ever stored or shared. Automations are optional and the app works fully without them.

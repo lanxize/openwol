@@ -1,0 +1,46 @@
+image: eclipse-temurin:17-jdk
+
+variables:
+  ANDROID_COMPILE_SDK: "35"
+  ANDROID_BUILD_TOOLS: "34.0.0"
+  ANDROID_SDK_TOOLS: "9477386"
+
+before_script:
+  - apt-get --quiet update --yes
+  - apt-get --quiet install --yes wget tar unzip lib32stdc++6 lib32z1
+  - wget --quiet --output-document=android-sdk.zip https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_TOOLS}_latest.zip
+  - unzip -d android-sdk-run android-sdk.zip
+  - mkdir -p android-sdk/cmdline-tools
+  - mv android-sdk-run/cmdline-tools/* android-sdk/cmdline-tools/
+  - yes | android-sdk/cmdline-tools/bin/sdkmanager --sdk_root=$PWD/android-sdk --licenses || true
+  - android-sdk/cmdline-tools/bin/sdkmanager --sdk_root=$PWD/android-sdk "platforms;android-${ANDROID_COMPILE_SDK}" "build-tools;${ANDROID_BUILD_TOOLS}"
+
+stages:
+  - build
+
+Build_Release:
+  stage: build
+  rules:
+    - if: $CI_COMMIT_BRANCH == "release"
+  script:
+    - export ANDROID_HOME=$PWD/android-sdk
+    - export PATH=$PATH:$ANDROID_HOME/cmdline-tools/bin:$ANDROID_HOME/platform-tools
+    - echo "$KEYSTORE_BASE64" | base64 -d > jcardoux.jks
+    - chmod +x ./gradlew
+    - ./gradlew assembleRelease -Pandroid.injected.signing.store.file="$PWD/jcardoux.jks" -Pandroid.injected.signing.store.password="$KEYSTORE_PASSWORD" -Pandroid.injected.signing.key.alias="$KEY_ALIAS" -Pandroid.injected.signing.key.password="$KEY_PASSWORD"
+    - cp app/build/outputs/apk/release/app-release.apk OpenWOL.apk
+    # Upload to Registry (History)
+    - "curl --header \"JOB-TOKEN: $CI_JOB_TOKEN\" --upload-file OpenWOL.apk \"${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/openwol/${CI_PIPELINE_IID}/OpenWOL.apk\""
+    # Upload to Registry (Latest - for README button)
+    - "curl --header \"JOB-TOKEN: $CI_JOB_TOKEN\" --upload-file OpenWOL.apk \"${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/openwol/latest/OpenWOL.apk\""
+    # Create tag and release via GitLab API (replaces deprecated release-cli)
+    - |
+      curl --fail \
+        --header "JOB-TOKEN: $CI_JOB_TOKEN" \
+        --header "Content-Type: application/json" \
+        --data "{\"name\":\"Release v${CI_PIPELINE_IID}\",\"tag_name\":\"v${CI_PIPELINE_IID}\",\"ref\":\"${CI_COMMIT_SHA}\",\"description\":\"Automated release from the release branch. Build ID: ${CI_PIPELINE_IID}\",\"assets\":{\"links\":[{\"name\":\"Download OpenWOL APK\",\"url\":\"${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/openwol/${CI_PIPELINE_IID}/OpenWOL.apk\"}]}}" \
+        "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/releases"
+  artifacts:
+    paths:
+      - OpenWOL.apk
+    expire_in: 1 week
