@@ -1,0 +1,2 @@
+Fix crash on app launch when location permission is removed and automations exist
+Enhanced pipelines
