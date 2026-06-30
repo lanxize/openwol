@@ -1,0 +1,1 @@
+Updated Gradle Wraper and aligned build settings for F-Droid compatibility and reproducible release
