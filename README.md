@@ -10,10 +10,14 @@
 ![Privacy First](https://img.shields.io/badge/privacy-first-green)
 ![Powered By](https://img.shields.io/badge/powered_by-electricity-ffc402)
 <br>
-<br>
-
-[![Download APK](https://img.shields.io/badge/DOWNLOAD%20APK-FFC300?logo=android&logoColor=000&style=for-the-badge)](https://gitlab.com/api/v4/projects/julien.cardoux%2Fopenwol/packages/generic/openwol/latest/OpenWOL.apk)
-
+   <div align="center">
+   <a href="https://f-droid.org/packages/com.juliencardoux.openwol">
+      <img src="https://f-droid.org/badge/get-it-on.svg" alt="Get it on F-Droid" height="80">
+   </a>
+   <a href="https://gitlab.com/api/v4/projects/julien.cardoux%2Fopenwol/packages/generic/openwol/latest/OpenWOL.apk">
+      <img src="./assets/get-it-from-gitlab.svg" alt="Get it from GitLab" height="80">
+   </a>
+   </div>
 </div>
 
 ## 🚀 Features
@@ -31,7 +35,7 @@
 
 ## 📲 Download
 
-The latest signed APK is downloadable [here](https://gitlab.com/api/v4/projects/julien.cardoux%2Fopenwol/packages/generic/openwol/latest/OpenWOL.apk) and ready to use.
+The latest signed APK is downloadable from [F-Droid](https://f-droid.org/packages/com.juliencardoux.openwol) or directly from [GitLab](https://gitlab.com/api/v4/projects/julien.cardoux%2Fopenwol/packages/generic/openwol/latest/OpenWOL.apk).
 
 > ⚠️ Android will display a warning during installation because the APK is sideloaded and not distributed through the Google Play Store, therefore not verified by Google. This is expected behavior for any APK installed outside of the Play Store. You will need to enable **"Install from unknown sources"** in your Android settings to proceed.
 
@@ -133,11 +137,11 @@ Contributions are welcome. If you'd like to help and have the time, feel free to
 
 Here are ideas and features to add in the future:
 
-- **F-Droid** deployment
-- **Backup & restore:** Allow exporting and importing saved devices and automations.
-- **Widget:** Add a home screen widget to send a Packet directly without opening the app.
-- **Automate:** Add new automations ideas.
-- **Groups:** Add the possibility to group devices.
+- [x] **F-Droid** deployment
+- [ ] **Backup & restore:** Allow exporting and importing saved devices and automations.
+- [ ] **Widget:** Add a home screen widget to send a Packet directly without opening the app.
+- [ ] **Automate:** Add new automations ideas.
+- [ ] **Groups:** Add the possibility to group devices.
 
 ## 🐛 Known Issues
 
@@ -166,3 +170,4 @@ This project uses the following open source resources:
 - [Google Fonts Icons](https://fonts.google.com/icons) - Apache 2.0 (Google) - Icons
 - [Shields.io](https://shields.io/) - Badges
 - [iMockupPRO](https://imockup.pro/generator?device=google-pixel-8-pro) - Mockup
+- [F-Droid Artwork](https://gitlab.com/fdroid/artwork) - GPL 3.0 / CC-BY-SA 3.0 (F-Droid) - "Get it on F-Droid" store badge
