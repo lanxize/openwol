@@ -5,10 +5,11 @@
 | | |
 |---|---|
 | 上游仓库 | <https://gitlab.com/julien.cardoux/openwol> |
+| 本 fork 仓库 | <https://github.com/lanxize/openwol> |
 | 基线 | `master` @ `08cbf7e`（v1.0.3 / versionCode 4） |
 | 本文档对应状态 | v1.1.0 / versionCode 5 |
-| 提交状态 | **尚未提交**，改动全在工作区 |
-| 许可 | 上游为 AGPL-3.0-or-later，本文档所描述的改动同样受其约束 |
+| 提交状态 | **已提交** `ac90712`，并已推送至 GitHub（`master` 分支 + `v1.0.0`~`v1.0.3` 四个 tag） |
+| 许可 | 上游自述为 AGPLv3（F-Droid 标注 `AGPL-3.0-or-later`）；本 fork 同样以 AGPL-3.0 发布 |
 
 > 之所以单独建这个文件而不是改写上游的 `README.md`，是为了保留原有说明完整无缺。
 > 如果要把这些功能提回上游，`README.md` 的 Features / Permissions / How to Use 三节也需要同步补充，见文末「后续建议」。
