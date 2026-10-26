@@ -1,3 +1,4 @@
+// Modified by lanxize in 2026-10. See CHANGES.md for details.
 package com.juliencardoux.openwol
 
 import android.content.Context
@@ -22,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -34,11 +36,22 @@ fun WOLScreen(
     bottomContentPadding: Dp,
     onDelete: (Device) -> Unit,
     onEdit: (Device) -> Unit,
-    onWake: (Device) -> Unit
+    onWake: (Device) -> Unit,
+    onSetDefault: (Device) -> Unit
 ) {
     if (devices.isEmpty()) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("No devices added yet", color = Color.Gray)
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(stringResource(R.string.no_devices), color = Color.Gray)
+                Spacer(Modifier.height(6.dp))
+                Text(
+                    stringResource(R.string.no_devices_hint),
+                    color = Color.Gray,
+                    style = MaterialTheme.typography.bodySmall,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(horizontal = 32.dp)
+                )
+            }
         }
     } else {
         LazyColumn(
@@ -56,7 +69,8 @@ fun WOLScreen(
                     device,
                     onEdit = { onEdit(device) },
                     onDelete = { onDelete(device) },
-                    onWake = { onWake(device) }
+                    onWake = { onWake(device) },
+                    onSetDefault = { onSetDefault(device) }
                 )
             }
         }
@@ -64,7 +78,13 @@ fun WOLScreen(
 }
 
 @Composable
-fun DeviceItem(device: Device, onEdit: () -> Unit, onDelete: () -> Unit, onWake: () -> Unit) {
+fun DeviceItem(
+    device: Device,
+    onEdit: () -> Unit,
+    onDelete: () -> Unit,
+    onWake: () -> Unit,
+    onSetDefault: () -> Unit
+) {
     Card(
         modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)),
@@ -81,17 +101,24 @@ fun DeviceItem(device: Device, onEdit: () -> Unit, onDelete: () -> Unit, onWake:
             }
             Box(modifier = Modifier.fillMaxHeight().width(4.dp).background(Color(device.color), RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp)))
             Row(
-                modifier = Modifier.padding(start = 20.dp, end = 16.dp, top = 16.dp, bottom = 16.dp).fillMaxWidth(),
+                modifier = Modifier.padding(start = 4.dp, end = 16.dp, top = 16.dp, bottom = 16.dp).fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                // Default-device selector: a single-choice control, because the selection
+                // can never be cleared (one device is always the default). Tapping it
+                // consumes the gesture, so picking the default never fires a wake packet.
+                RadioButton(
+                    selected = device.isDefault,
+                    onClick = onSetDefault
+                )
                 Column(modifier = Modifier.weight(1f)) {
                     Text(text = device.name, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                     Text(text = device.mac, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    IconButton(onClick = onEdit) { Icon(Icons.Default.Edit, "Edit", modifier = Modifier.size(20.dp)) }
-                    IconButton(onClick = onDelete) { Icon(Icons.Default.Delete, "Delete", tint = Color.Red.copy(alpha = 0.7f), modifier = Modifier.size(20.dp)) }
+                    IconButton(onClick = onEdit) { Icon(Icons.Default.Edit, stringResource(R.string.cd_edit), modifier = Modifier.size(20.dp)) }
+                    IconButton(onClick = onDelete) { Icon(Icons.Default.Delete, stringResource(R.string.cd_delete), tint = Color.Red.copy(alpha = 0.7f), modifier = Modifier.size(20.dp)) }
                 }
             }
         }
@@ -125,7 +152,7 @@ fun AutomationItem(
                     }
                     Text(automation.name, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                 }
-                Text("SSID: ${automation.ssid}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(stringResource(R.string.automation_ssid, automation.ssid), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 if (automationDevices.isNotEmpty()) {
                     Text(
                         automationDevices.joinToString(", ") { it.name },
@@ -135,8 +162,8 @@ fun AutomationItem(
                 }
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
-                IconButton(onClick = onEdit) { Icon(Icons.Default.Edit, "Edit", modifier = Modifier.size(20.dp)) }
-                IconButton(onClick = onDelete) { Icon(Icons.Default.Delete, "Delete", tint = Color.Red.copy(alpha = 0.7f), modifier = Modifier.size(20.dp)) }
+                IconButton(onClick = onEdit) { Icon(Icons.Default.Edit, stringResource(R.string.cd_edit), modifier = Modifier.size(20.dp)) }
+                IconButton(onClick = onDelete) { Icon(Icons.Default.Delete, stringResource(R.string.cd_delete), tint = Color.Red.copy(alpha = 0.7f), modifier = Modifier.size(20.dp)) }
             }
         }
     }
@@ -197,7 +224,7 @@ fun RemoteWaveOverlay(visible: Boolean, color: Long, onFinished: () -> Unit) {
                     )
                     Spacer(modifier = Modifier.width(12.dp))
                     Text(
-                        text = "Packet Sent",
+                        text = stringResource(R.string.packet_sent),
                         style = MaterialTheme.typography.titleMedium,
                         color = textColor
                     )
@@ -225,9 +252,9 @@ fun ConnectionWarningOverlay(isReady: Boolean) {
             ) {
                 Icon(imageVector = Icons.Default.WifiOff, contentDescription = null, modifier = Modifier.size(80.dp), tint = MaterialTheme.colorScheme.error)
                 Spacer(modifier = Modifier.height(24.dp))
-                Text(text = "Local Network Required", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onErrorContainer, textAlign = TextAlign.Center)
+                Text(text = stringResource(R.string.local_network_required), style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onErrorContainer, textAlign = TextAlign.Center)
                 Spacer(modifier = Modifier.height(12.dp))
-                Text(text = "Wake-on-LAN packets require a WiFi or VPN connection to reach your devices.", style = MaterialTheme.typography.bodyLarge, textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.onErrorContainer)
+                Text(text = stringResource(R.string.local_network_required_body), style = MaterialTheme.typography.bodyLarge, textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.onErrorContainer)
                 Spacer(modifier = Modifier.height(48.dp))
                 CircularProgressIndicator(color = MaterialTheme.colorScheme.error)
             }

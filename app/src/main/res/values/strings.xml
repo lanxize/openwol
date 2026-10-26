@@ -1,3 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Modified by lanxize in 2026-10. See CHANGES.md for details. -->
 <resources>
     <string name="app_name">OpenWOL</string>
+
+    <!-- Main screen / bottom bar -->
+    <string name="bottom_bar_menu">Menu</string>
+    <string name="bottom_bar_automate">Automate</string>
+    <string name="cd_add_device">Add Device</string>
+    <string name="cd_edit">Edit</string>
+    <string name="cd_delete">Delete</string>
+
+    <!-- Device list -->
+    <string name="no_devices">No devices added yet</string>
+    <string name="no_devices_hint">The first device you add becomes the default one the Quick Settings tile wakes.</string>
+    <string name="packet_sent">Packet Sent</string>
+    <string name="local_network_required">Local Network Required</string>
+    <string name="local_network_required_body">Wake-on-LAN packets require a WiFi or VPN connection to reach your devices.</string>
+
+    <!-- Automations -->
+    <string name="no_automations">No automations yet</string>
+    <string name="add_automation">Add automation</string>
+    <string name="automation_ssid">SSID: %1$s</string>
+
+    <!-- Menu panel -->
+    <string name="menu_settings">Settings</string>
+    <string name="menu_info">Info</string>
+    <string name="menu_help">Help</string>
+
+    <!-- Shared actions -->
+    <string name="action_save">Save</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_close">Close</string>
+    <string name="action_ok">OK</string>
+
+    <!-- Help dialog -->
+    <string name="help_title">Help</string>
+    <string name="help_bios_title">1. BIOS Setup</string>
+    <string name="help_bios_body">Enable \'Wake on LAN\' or \'Power On By PCI-E\' in your computer\'s BIOS settings.</string>
+    <string name="help_windows_title">2. Windows Setup</string>
+    <string name="help_windows_body">In Device Manager, go to your Network Adapter properties, in Advanced check \'Allow this device to wake the computer\', \'Wake on Magic Packet\' &amp; \'Wake on magic packet when system is in the S0ix power state\'.</string>
+    <string name="help_linux_title">3. Linux Setup</string>
+    <string name="help_linux_body">You already know how to do it.</string>
+    <string name="help_network_title">4. Networking</string>
+    <string name="help_network_body">If waking fails, use \'Advanced Settings\' in OpenWOL to specify your PC\'s IP and Subnet Mask.</string>
+    <string name="help_warning">⚠️ It\'s best to set the IP address to avoid spamming your entire network range.</string>
+
+    <!-- Info dialog -->
+    <string name="info_tagline">A simple, open-source Wake-on-LAN app for Android.</string>
+    <string name="info_privacy_title">Privacy</string>
+    <string name="info_privacy_body">No data is collected, stored, or shared — ever. The app works entirely offline and does not require an account or internet access.</string>
+    <string name="info_source_title">Source Code</string>
+    <string name="info_libraries_title">Open Source Libraries</string>
+    <string name="info_library_kotlin">• Kotlin — Apache 2.0 (JetBrains)</string>
+    <string name="info_library_compose">• Jetpack Compose — Apache 2.0 (Google)</string>
+    <string name="info_library_material">• Material Design 3 / Icons — Apache 2.0 (Google)</string>
+    <string name="info_library_androidx">• AndroidX (Core, Lifecycle, SplashScreen) — Apache 2.0 (Google)</string>
+    <string name="info_library_serialization">• kotlinx.serialization — Apache 2.0 (JetBrains)</string>
+    <string name="info_library_icons">• Google Fonts Icons — Apache 2.0 (Google)</string>
+    <string name="info_license_title">License</string>
+    <!-- Wrapped in double quotes: aapt trims leading/trailing spaces otherwise,
+         which would glue this fragment onto the licence link. -->
+    <string name="info_license_prefix">"OpenWOL is released under the "</string>
+    <string name="info_license_link">GNU AGPLv3 License</string>
+    <string name="info_license_suffix">.</string>
+
+    <!-- Settings dialog -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_theme">Theme</string>
+    <string name="theme_system">System default</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+
+    <!-- Location permission rationale -->
+    <string name="location_permission_title">Location Permission Required</string>
+    <string name="location_permission_body_1">Automations need location permission exclusively to read your Wi-Fi network name (SSID), so the app can detect when you join a specific network and wake your devices automatically.</string>
+    <string name="location_permission_body_2">This is the only purpose for which location access is used. No location data is ever collected, stored, or shared.</string>
+    <string name="location_permission_body_3">When prompted, select \"Allow all the time\" so automations can trigger even when the app is in the background.</string>
+
+    <!-- Notification permission rationale shown once on first launch -->
+    <string name="notification_permission_title">Allow Notifications</string>
+    <string name="notification_permission_body_1">The Quick Settings tile shows a short message after every tap: whether the wake command was sent, whether no device is set up yet, or whether the network is wrong. On Android 13 and newer the system silently drops those messages while the app\'s notifications are turned off — which is exactly when the tile is used.</string>
+    <string name="notification_permission_body_2">The same permission is also what makes the automation notifications visible, including the ongoing service notice.</string>
+    <string name="notification_permission_body_3">No data is collected, stored, or shared. The permission is only used to display messages on this device.</string>
+    <string name="notification_permission_confirm">Allow</string>
+    <string name="notification_permission_cancel">Not now</string>
+
+    <!-- Delete confirmations -->
+    <string name="delete_device_title">Delete Device</string>
+    <string name="delete_device_prefix">Are you sure you want </string>
+    <string name="delete_device_suffix"> to be removed? This cannot be undone.</string>
+    <string name="delete_automation_title">Delete Automation</string>
+    <string name="delete_automation_prefix">Are you sure you want to delete </string>
+    <string name="delete_automation_suffix"> automation? This cannot be undone.</string>
+
+    <!-- Add / edit device -->
+    <string name="add_device_title">Add Device</string>
+    <string name="edit_device_title">Edit Device</string>
+    <string name="field_name">Name</string>
+    <string name="field_mac">MAC Address</string>
+    <string name="show_advanced">Show Advanced Settings</string>
+    <string name="field_ip">IP Address</string>
+    <string name="placeholder_ip">192.168.1.1</string>
+    <string name="field_port">Port</string>
+    <string name="port_default">9 (Default)</string>
+    <string name="field_subnet_mask">Subnet Mask</string>
+    <string name="device_color">Device Color</string>
+
+    <!-- Add / edit automation -->
+    <string name="add_automation_title">Add Automation</string>
+    <string name="edit_automation_title">Edit Automation</string>
+    <string name="field_ssid">Wi-Fi SSID</string>
+    <string name="field_devices">Devices</string>
+    <string name="devices_selected_count">%1$d devices selected</string>
+    <string name="notify_on_trigger">Send push notification on trigger</string>
+
+    <!-- Automation foreground service notifications -->
+    <string name="channel_service_name">Automation Service</string>
+    <string name="channel_automations_name">Automations</string>
+    <string name="service_notification_title">Automations active</string>
+    <string name="service_notification_text">Watching for Wi-Fi changes</string>
+    <string name="notification_automation_title">Automation triggered</string>
+    <string name="notification_automation_text">\"%1$s\" fired on Wi-Fi \"%2$s\"</string>
+
+    <!-- Quick Settings tile -->
+    <string name="tile_label">OpenWOL Wake</string>
+    <string name="tile_title">Turn on \"%1$s\"</string>
+    <string name="tile_no_device">No device available</string>
+    <string name="tile_network_error">Network unavailable</string>
+    <string name="tile_packet_sent">Wake command sent</string>
 </resources>

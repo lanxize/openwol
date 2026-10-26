@@ -1,3 +1,4 @@
+// Modified by lanxize in 2026-10. See CHANGES.md for details.
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -8,13 +9,22 @@ plugins {
 android {
     namespace = "com.juliencardoux.openwol"
     compileSdk = 35
+    // Pinned explicitly: AGP 8.6 would otherwise default to build-tools 34.0.0, which
+    // no longer matches the compile SDK, and it refuses to build when the requested
+    // revision is not installed. Must stay in sync with ANDROID_BUILD_TOOLS in .gitlab-ci.yml.
+    buildToolsVersion = "35.0.0"
 
     defaultConfig {
-        applicationId = "com.juliencardoux.openwol"
+        // Fork-specific. The upstream identity is com.juliencardoux.openwol; reusing it
+        // would collide with the official build (signature mismatch on update, forcing a
+        // reinstall) and would borrow a namespace this fork does not own.
+        // `namespace` above is deliberately left alone: it only names the generated R
+        // class and is invisible to users, so changing it would churn every source file.
+        applicationId = "io.github.lanxize.openwol"
         minSdk = 21
         targetSdk = 35
-        versionCode = 4
-        versionName = "1.0.3"
+        versionCode = 5
+        versionName = "1.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

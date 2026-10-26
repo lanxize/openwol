@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Monochrome Quick Settings tile glyph: the OpenWOL bolt mark, drawn white on a
+    transparent background so the system can tint it to match the active theme.
+    Same geometry as ic_notification.xml, scaled to the 24dp size a tile expects
+    (the group scale/translate centres the 202.75 viewport artwork with a small inset).
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="202.75"
+    android:viewportHeight="202.75">
+  <group
+      android:scaleX="0.86"
+      android:scaleY="0.86"
+      android:translateX="14.1925"
+      android:translateY="14.1925">
+    <path
+        android:pathData="M101.38,0A101.38,101.38 0,0 0,0 101.38,101.38 101.38,0 0,0 50.86,189L71.74,118.22 33.67,112.25 138.81,7.19A101.38,101.38 0,0 0,101.38 0ZM153.98,14.73 L133.81,78.23 169.08,83.76 65.05,195.75a101.38,101.38 0,0 0,36.33 7,101.38 101.38,0 0,0 101.38,-101.38 101.38,101.38 0,0 0,-48.77 -86.64z"
+        android:fillColor="#FFFFFFFF"/>
+  </group>
+</vector>

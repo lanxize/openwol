@@ -1,3 +1,4 @@
+// Modified by lanxize in 2026-10. See CHANGES.md for details.
 package com.juliencardoux.openwol
 
 import android.app.Activity
@@ -25,6 +26,7 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
@@ -56,7 +58,7 @@ fun HelpDialog(onDismiss: () -> Unit) {
     val scrollState = rememberScrollState()
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Help") },
+        title = { Text(stringResource(R.string.help_title)) },
         text = {
             Box(modifier = Modifier.heightIn(max = 360.dp)) {
                 Column(
@@ -65,25 +67,25 @@ fun HelpDialog(onDismiss: () -> Unit) {
                         .verticalScroll(scrollState)
                         .padding(end = 12.dp)
                 ) {
-                    Text("1. BIOS Setup", fontWeight = FontWeight.Bold)
-                    Text("Enable 'Wake on LAN' or 'Power On By PCI-E' in your computer's BIOS settings.")
+                    Text(stringResource(R.string.help_bios_title), fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.help_bios_body))
                     Spacer(Modifier.height(4.dp))
-                    Text("2. Windows Setup", fontWeight = FontWeight.Bold)
-                    Text("In Device Manager, go to your Network Adapter properties, in Advanced check 'Allow this device to wake the computer', 'Wake on Magic Packet' & 'Wake on magic packet when system is in the S0ix power state'.")
+                    Text(stringResource(R.string.help_windows_title), fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.help_windows_body))
                     Spacer(Modifier.height(4.dp))
-                    Text("3. Linux Setup", fontWeight = FontWeight.Bold)
-                    Text("You already know how to do it.")
+                    Text(stringResource(R.string.help_linux_title), fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.help_linux_body))
                     Spacer(Modifier.height(4.dp))
-                    Text("4. Networking", fontWeight = FontWeight.Bold)
-                    Text("If waking fails, use 'Advanced Settings' in OpenWOL to specify your PC's IP and Subnet Mask.")
+                    Text(stringResource(R.string.help_network_title), fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.help_network_body))
                     Spacer(Modifier.height(4.dp))
-                    Text("⚠️ It's best to set the IP address to avoid spamming your entire network range.")
+                    Text(stringResource(R.string.help_warning))
                 }
                 DialogScrollbar(state = scrollState, modifier = Modifier.align(Alignment.CenterEnd))
             }
         },
         confirmButton = {
-            Button(onClick = onDismiss) { Text("Close") }
+            Button(onClick = onDismiss) { Text(stringResource(R.string.action_close)) }
         }
     )
 }
@@ -104,7 +106,7 @@ fun InfoDialog(onDismiss: () -> Unit) {
                     contentDescription = null,
                     modifier = Modifier.size(48.dp)
                 )
-                Text("OpenWOL")
+                Text(stringResource(R.string.app_name))
             }
         },
         text = {
@@ -113,14 +115,14 @@ fun InfoDialog(onDismiss: () -> Unit) {
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.verticalScroll(scrollState).padding(end = 12.dp)
                 ) {
-                    Text("A simple, open-source Wake-on-LAN app for Android.")
+                    Text(stringResource(R.string.info_tagline))
 
                     Spacer(Modifier.height(2.dp))
-                    Text("Privacy", fontWeight = FontWeight.Bold)
-                    Text("No data is collected, stored, or shared — ever. The app works entirely offline and does not require an account or internet access.")
+                    Text(stringResource(R.string.info_privacy_title), fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.info_privacy_body))
 
                     Spacer(Modifier.height(2.dp))
-                    Text("Source Code", fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.info_source_title), fontWeight = FontWeight.Bold)
                     Text(
                         "gitlab.com/julien.cardoux/openwol",
                         color = MaterialTheme.colorScheme.primary,
@@ -131,24 +133,29 @@ fun InfoDialog(onDismiss: () -> Unit) {
                     )
 
                     Spacer(Modifier.height(2.dp))
-                    Text("Open Source Libraries", fontWeight = FontWeight.Bold)
-                    Text("• Kotlin — Apache 2.0 (JetBrains)")
-                    Text("• Jetpack Compose — Apache 2.0 (Google)")
-                    Text("• Material Design 3 / Icons — Apache 2.0 (Google)")
-                    Text("• AndroidX (Core, Lifecycle, SplashScreen) — Apache 2.0 (Google)")
-                    Text("• kotlinx.serialization — Apache 2.0 (JetBrains)")
-                    Text("• Google Fonts Icons — Apache 2.0 (Google)")
+                    Text(stringResource(R.string.info_libraries_title), fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.info_library_kotlin))
+                    Text(stringResource(R.string.info_library_compose))
+                    Text(stringResource(R.string.info_library_material))
+                    Text(stringResource(R.string.info_library_androidx))
+                    Text(stringResource(R.string.info_library_serialization))
+                    Text(stringResource(R.string.info_library_icons))
 
                     Spacer(Modifier.height(2.dp))
-                    Text("License", fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.info_license_title), fontWeight = FontWeight.Bold)
+                    // stringResource() is a composable call, so the fragments are resolved
+                    // before entering the non-composable buildAnnotatedString() scope.
+                    val licensePrefix = stringResource(R.string.info_license_prefix)
+                    val licenseLink = stringResource(R.string.info_license_link)
+                    val licenseSuffix = stringResource(R.string.info_license_suffix)
                     val licenseText = buildAnnotatedString {
-                        append("OpenWOL is released under the ")
+                        append(licensePrefix)
                         pushStringAnnotation(tag = "URL", annotation = "https://www.gnu.org/licenses/agpl-3.0.html")
                         withStyle(SpanStyle(color = MaterialTheme.colorScheme.primary)) {
-                            append("GNU AGPLv3 License")
+                            append(licenseLink)
                         }
                         pop()
-                        append(".")
+                        append(licenseSuffix)
                     }
                     ClickableText(
                         text = licenseText,
@@ -165,7 +172,7 @@ fun InfoDialog(onDismiss: () -> Unit) {
             }
         },
         confirmButton = {
-            Button(onClick = onDismiss) { Text("Close") }
+            Button(onClick = onDismiss) { Text(stringResource(R.string.action_close)) }
         }
     )
 }
@@ -178,19 +185,19 @@ fun SettingsDialog(
 ) {
     var dropdownExpanded by remember { mutableStateOf(false) }
     val themeLabel = when (currentTheme) {
-        ThemeMode.System -> "System default"
-        ThemeMode.Light  -> "Light"
-        ThemeMode.Dark   -> "Dark"
+        ThemeMode.System -> stringResource(R.string.theme_system)
+        ThemeMode.Light  -> stringResource(R.string.theme_light)
+        ThemeMode.Dark   -> stringResource(R.string.theme_dark)
     }
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Settings") },
+        title = { Text(stringResource(R.string.settings_title)) },
         text = {
             Box(modifier = Modifier.heightIn(max = 360.dp)) {
                 val density = LocalDensity.current
                 var fieldWidthPx by remember { mutableStateOf(0) }
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text("Theme", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelLarge)
+                    Text(stringResource(R.string.settings_theme), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelLarge)
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -209,16 +216,16 @@ fun SettingsDialog(
                             onDismissRequest = { dropdownExpanded = false },
                             modifier = Modifier.width(with(density) { fieldWidthPx.toDp() })
                         ) {
-                            DropdownMenuItem(text = { Text("System default") }, onClick = { onThemeChange(ThemeMode.System); dropdownExpanded = false })
-                            DropdownMenuItem(text = { Text("Light") },          onClick = { onThemeChange(ThemeMode.Light);  dropdownExpanded = false })
-                            DropdownMenuItem(text = { Text("Dark") },           onClick = { onThemeChange(ThemeMode.Dark);   dropdownExpanded = false })
+                            DropdownMenuItem(text = { Text(stringResource(R.string.theme_system)) }, onClick = { onThemeChange(ThemeMode.System); dropdownExpanded = false })
+                            DropdownMenuItem(text = { Text(stringResource(R.string.theme_light)) },  onClick = { onThemeChange(ThemeMode.Light);  dropdownExpanded = false })
+                            DropdownMenuItem(text = { Text(stringResource(R.string.theme_dark)) },   onClick = { onThemeChange(ThemeMode.Dark);   dropdownExpanded = false })
                         }
                     }
                 }
             }
         },
         confirmButton = {
-            Button(onClick = onDismiss) { Text("Close") }
+            Button(onClick = onDismiss) { Text(stringResource(R.string.action_close)) }
         }
     )
 }
@@ -228,19 +235,41 @@ fun LocationPermissionDialog(onConfirm: () -> Unit, onCancel: () -> Unit) {
     AlertDialog(
         onDismissRequest = onCancel,
         icon = { Icon(Icons.Default.LocationOn, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
-        title = { Text("Location Permission Required") },
+        title = { Text(stringResource(R.string.location_permission_title)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("Automations need location permission exclusively to read your Wi-Fi network name (SSID), so the app can detect when you join a specific network and wake your devices automatically.")
-                Text("This is the only purpose for which location access is used. No location data is ever collected, stored, or shared.")
-                Text("When prompted, select \"Allow all the time\" so automations can trigger even when the app is in the background.")
+                Text(stringResource(R.string.location_permission_body_1))
+                Text(stringResource(R.string.location_permission_body_2))
+                Text(stringResource(R.string.location_permission_body_3))
             }
         },
         confirmButton = {
-            Button(onClick = onConfirm) { Text("OK") }
+            Button(onClick = onConfirm) { Text(stringResource(R.string.action_ok)) }
         },
         dismissButton = {
-            TextButton(onClick = onCancel) { Text("Cancel") }
+            TextButton(onClick = onCancel) { Text(stringResource(R.string.action_cancel)) }
+        }
+    )
+}
+
+@Composable
+fun NotificationPermissionDialog(onConfirm: () -> Unit, onCancel: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onCancel,
+        icon = { Icon(Icons.Default.Notifications, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
+        title = { Text(stringResource(R.string.notification_permission_title)) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(stringResource(R.string.notification_permission_body_1))
+                Text(stringResource(R.string.notification_permission_body_2))
+                Text(stringResource(R.string.notification_permission_body_3))
+            }
+        },
+        confirmButton = {
+            Button(onClick = onConfirm) { Text(stringResource(R.string.notification_permission_confirm)) }
+        },
+        dismissButton = {
+            TextButton(onClick = onCancel) { Text(stringResource(R.string.notification_permission_cancel)) }
         }
     )
 }
@@ -250,22 +279,24 @@ fun DeleteConfirmationDialog(deviceName: String, onDismiss: () -> Unit, onConfir
     AlertDialog(
         onDismissRequest = onDismiss,
         icon = { Icon(Icons.Default.Warning, contentDescription = null, tint = MaterialTheme.colorScheme.error) },
-        title = { Text("Delete Device") },
+        title = { Text(stringResource(R.string.delete_device_title)) },
         text = {
+            val prefix = stringResource(R.string.delete_device_prefix)
+            val suffix = stringResource(R.string.delete_device_suffix)
             Text(buildAnnotatedString {
-                append("Are you sure you want ")
+                append(prefix)
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) { append(deviceName) }
-                append(" to be removed? This cannot be undone.")
+                append(suffix)
             })
         },
         confirmButton = {
             Button(
                 onClick = onConfirm,
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
-            ) { Text("Delete") }
+            ) { Text(stringResource(R.string.action_delete)) }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) }
         }
     )
 }
@@ -275,21 +306,23 @@ fun DeleteAutomationConfirmationDialog(automationName: String, onDismiss: () -> 
     AlertDialog(
         onDismissRequest = onDismiss,
         icon = { Icon(Icons.Default.Warning, contentDescription = null, tint = MaterialTheme.colorScheme.error) },
-        title = { Text("Delete Automation") },
+        title = { Text(stringResource(R.string.delete_automation_title)) },
         text = {
+            val prefix = stringResource(R.string.delete_automation_prefix)
+            val suffix = stringResource(R.string.delete_automation_suffix)
             Text(buildAnnotatedString {
-                append("Are you sure you want to delete ")
+                append(prefix)
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) { append(automationName) }
-                append(" automation? This cannot be undone.")
+                append(suffix)
             })
         },
         confirmButton = {
             Button(
                 onClick = onConfirm,
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
-            ) { Text("Delete") }
+            ) { Text(stringResource(R.string.action_delete)) }
         },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } }
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) } }
     )
 }
 
@@ -343,13 +376,13 @@ fun AddDeviceDialog(deviceToEdit: Device? = null, onDismiss: () -> Unit, onConfi
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(if (deviceToEdit == null) "Add Device" else "Edit Device") },
+        title = { Text(stringResource(if (deviceToEdit == null) R.string.add_device_title else R.string.edit_device_title)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it.replaceFirstChar { c -> c.uppercaseChar() } },
-                    label = { Text("Name") },
+                    label = { Text(stringResource(R.string.field_name)) },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words, imeAction = ImeAction.Done),
                     keyboardActions = onDone
@@ -357,7 +390,7 @@ fun AddDeviceDialog(deviceToEdit: Device? = null, onDismiss: () -> Unit, onConfi
                 OutlinedTextField(
                     value = macText,
                     onValueChange = { macText = it.filter { c -> c.isLetterOrDigit() }.take(12).uppercase() },
-                    label = { Text("MAC Address") },
+                    label = { Text(stringResource(R.string.field_mac)) },
                     modifier = Modifier.fillMaxWidth(),
                     visualTransformation = macTransformation,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, capitalization = KeyboardCapitalization.Characters, imeAction = ImeAction.Done),
@@ -366,7 +399,7 @@ fun AddDeviceDialog(deviceToEdit: Device? = null, onDismiss: () -> Unit, onConfi
 
                 Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.clickable { isAdvancedShown = !isAdvancedShown }.padding(vertical = 4.dp)) {
                     Checkbox(checked = isAdvancedShown, onCheckedChange = { isAdvancedShown = it })
-                    Text("Show Advanced Settings", style = MaterialTheme.typography.bodyMedium)
+                    Text(stringResource(R.string.show_advanced), style = MaterialTheme.typography.bodyMedium)
                 }
 
                 AnimatedVisibility(visible = isAdvancedShown) {
@@ -377,18 +410,18 @@ fun AddDeviceDialog(deviceToEdit: Device? = null, onDismiss: () -> Unit, onConfi
                                 onValueChange = { input ->
                                     ip = input.filter { it.isDigit() || it == '.' }.take(15)
                                 },
-                                label = { Text("IP Address") },
+                                label = { Text(stringResource(R.string.field_ip)) },
                                 isError = !isIpValid,
-                                placeholder = { Text("192.168.1.1") },
+                                placeholder = { Text(stringResource(R.string.placeholder_ip)) },
                                 modifier = Modifier.weight(1f),
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
                                 keyboardActions = onDone
                             )
                             Box(modifier = Modifier.weight(0.7f)) {
-                                OutlinedTextField(value = selectedPort.toString(), onValueChange = {}, readOnly = true, label = { Text("Port") }, trailingIcon = { Icon(Icons.Default.ArrowDropDown, null) })
+                                OutlinedTextField(value = selectedPort.toString(), onValueChange = {}, readOnly = true, label = { Text(stringResource(R.string.field_port)) }, trailingIcon = { Icon(Icons.Default.ArrowDropDown, null) })
                                 Box(modifier = Modifier.matchParentSize().clickable { portExpanded = true })
                                 DropdownMenu(expanded = portExpanded, onDismissRequest = { portExpanded = false }) {
-                                    DropdownMenuItem(text = { Text("9 (Default)") }, onClick = { selectedPort = 9; portExpanded = false })
+                                    DropdownMenuItem(text = { Text(stringResource(R.string.port_default)) }, onClick = { selectedPort = 9; portExpanded = false })
                                     DropdownMenuItem(text = { Text("7") }, onClick = { selectedPort = 7; portExpanded = false })
                                 }
                             }
@@ -398,7 +431,7 @@ fun AddDeviceDialog(deviceToEdit: Device? = null, onDismiss: () -> Unit, onConfi
                             onValueChange = { input ->
                                 mask = input.filter { it.isDigit() || it == '.' }.take(15)
                             },
-                            label = { Text("Subnet Mask") },
+                            label = { Text(stringResource(R.string.field_subnet_mask)) },
                             modifier = Modifier.fillMaxWidth(),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
                             keyboardActions = onDone
@@ -407,7 +440,7 @@ fun AddDeviceDialog(deviceToEdit: Device? = null, onDismiss: () -> Unit, onConfi
                 }
 
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("Device Color", style = MaterialTheme.typography.labelMedium)
+                    Text(stringResource(R.string.device_color), style = MaterialTheme.typography.labelMedium)
                     Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
                         colorOptions.forEach { colorHex ->
                             val isSelected = selectedColor == colorHex
@@ -436,12 +469,16 @@ fun AddDeviceDialog(deviceToEdit: Device? = null, onDismiss: () -> Unit, onConfi
                         ip = if (isAdvancedShown) ip else "",
                         mask = if (isAdvancedShown) mask else "255.255.255.0",
                         port = if (isAdvancedShown) selectedPort else 9,
-                        color = selectedColor
+                        color = selectedColor,
+                        // Carry the flag through: this dialog rebuilds the whole Device
+                        // from scratch, so dropping it here would silently clear the
+                        // default selection whenever a device is edited.
+                        isDefault = deviceToEdit?.isDefault ?: false
                     ))
                 }
-            ) { Text("Save") }
+            ) { Text(stringResource(R.string.action_save)) }
         },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } }
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) } }
     )
 }
 
@@ -499,7 +536,7 @@ fun AddAutomationDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(if (automationToEdit == null) "Add Automation" else "Edit Automation") },
+        title = { Text(stringResource(if (automationToEdit == null) R.string.add_automation_title else R.string.edit_automation_title)) },
         text = {
             Column(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -508,7 +545,7 @@ fun AddAutomationDialog(
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it.replaceFirstChar { c -> c.uppercaseChar() } },
-                    label = { Text("Name") },
+                    label = { Text(stringResource(R.string.field_name)) },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words, imeAction = ImeAction.Done),
                     keyboardActions = onDone
@@ -516,7 +553,7 @@ fun AddAutomationDialog(
                 OutlinedTextField(
                     value = ssid,
                     onValueChange = { ssid = it },
-                    label = { Text("Wi-Fi SSID") },
+                    label = { Text(stringResource(R.string.field_ssid)) },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                     keyboardActions = onDone
@@ -526,11 +563,11 @@ fun AddAutomationDialog(
                         value = when {
                             selectedMacs.isEmpty() -> ""
                             selectedMacs.size == 1 -> devices.find { it.mac == selectedMacs.first() }?.name ?: ""
-                            else -> "${selectedMacs.size} devices selected"
+                            else -> stringResource(R.string.devices_selected_count, selectedMacs.size)
                         },
                         onValueChange = {},
                         readOnly = true,
-                        label = { Text("Devices") },
+                        label = { Text(stringResource(R.string.field_devices)) },
                         trailingIcon = { Icon(Icons.Default.ArrowDropDown, null) },
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -541,7 +578,7 @@ fun AddAutomationDialog(
                     ) {
                         if (devices.isEmpty()) {
                             DropdownMenuItem(
-                                text = { Text("No devices added yet", color = MaterialTheme.colorScheme.onSurfaceVariant) },
+                                text = { Text(stringResource(R.string.no_devices), color = MaterialTheme.colorScheme.onSurfaceVariant) },
                                 onClick = {}
                             )
                         } else {
@@ -570,7 +607,7 @@ fun AddAutomationDialog(
                         .padding(vertical = 4.dp)
                 ) {
                     Checkbox(checked = notifyOnTrigger, onCheckedChange = { handleNotifyChange(it) })
-                    Text("Send push notification on trigger", style = MaterialTheme.typography.bodyMedium)
+                    Text(stringResource(R.string.notify_on_trigger), style = MaterialTheme.typography.bodyMedium)
                 }
             }
         },
@@ -586,8 +623,8 @@ fun AddAutomationDialog(
                         notifyOnTrigger = notifyOnTrigger
                     ))
                 }
-            ) { Text("Save") }
+            ) { Text(stringResource(R.string.action_save)) }
         },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } }
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) } }
     )
 }

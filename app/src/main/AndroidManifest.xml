@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Modified by lanxize in 2026-10. See CHANGES.md for details. -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -38,7 +39,30 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!--
+                Long-pressing the Quick Settings tile opens this activity: the system
+                resolves a tile's preferences screen through this action.
+            -->
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES" />
+            </intent-filter>
         </activity>
+
+        <!--
+            Quick Settings tile (the "control centre" switch) that wakes the default
+            device without opening the app. BIND_QUICK_SETTINGS_TILE keeps binding
+            restricted to the system, and exported="true" is what lets SystemUI reach it.
+        -->
+        <service
+            android:name=".WolTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_tile_wol"
+            android:label="@string/tile_label"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
 
         <service
             android:name=".AutomationService"

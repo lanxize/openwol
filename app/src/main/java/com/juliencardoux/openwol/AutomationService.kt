@@ -1,3 +1,4 @@
+// Modified by lanxize in 2026-10. See CHANGES.md for details.
 package com.juliencardoux.openwol
 
 import android.app.Notification
@@ -42,14 +43,14 @@ class AutomationService : Service() {
             nm.createNotificationChannel(
                 NotificationChannel(
                     SERVICE_CHANNEL_ID,
-                    "Automation Service",
+                    getString(R.string.channel_service_name),
                     NotificationManager.IMPORTANCE_LOW
                 ).apply { setShowBadge(false) }
             )
             nm.createNotificationChannel(
                 NotificationChannel(
                     AppConstants.CHANNEL_AUTOMATIONS,
-                    "Automations",
+                    getString(R.string.channel_automations_name),
                     NotificationManager.IMPORTANCE_DEFAULT
                 )
             )
@@ -59,8 +60,8 @@ class AutomationService : Service() {
     private fun buildServiceNotification(): Notification =
         NotificationCompat.Builder(this, SERVICE_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle("Automations active")
-            .setContentText("Watching for Wi-Fi changes")
+            .setContentTitle(getString(R.string.service_notification_title))
+            .setContentText(getString(R.string.service_notification_text))
             .setOngoing(true)
             .setSilent(true)
             .setPriority(NotificationCompat.PRIORITY_LOW)

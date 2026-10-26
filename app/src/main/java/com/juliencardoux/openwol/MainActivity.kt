@@ -1,3 +1,4 @@
+// Modified by lanxize in 2026-10. See CHANGES.md for details.
 package com.juliencardoux.openwol
 
 import android.content.Context
@@ -32,6 +33,7 @@ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.core.app.ActivityCompat
@@ -76,6 +78,7 @@ class MainActivity : ComponentActivity() {
                 var automationToEdit by remember { mutableStateOf<Automation?>(null) }
                 var automationToDelete by remember { mutableStateOf<Automation?>(null) }
                 var showLocationPermissionRationale by remember { mutableStateOf(false) }
+                var showNotificationPermissionRationale by remember { mutableStateOf(false) }
 
                 //Android 10+: Try requesting background location access directly
                 //On Android 11+, if the user previously chose "While using the app", launch() returns denied silently
@@ -141,6 +144,26 @@ class MainActivity : ComponentActivity() {
                     while (true) {
                         isNetworkReady = isLocalNetworkAvailable(context)
                         delay(2000)
+                    }
+                }
+
+                //Ask for notification permission once, on first launch, and explain why.
+                //This is not cosmetic: Android 13+ silently drops an app's toasts while its
+                //notifications are switched off and it has no visible UI - which is exactly
+                //the Quick Settings tile's situation. Without the permission the tile would
+                //send its packet and appear to do nothing at all.
+                val notificationPermissionLauncher = rememberLauncherForActivityResult(
+                    ActivityResultContracts.RequestPermission()
+                ) { /* Answered either way; the flag below means we never ask twice. */ }
+
+                LaunchedEffect(Unit) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                        ContextCompat.checkSelfPermission(
+                            context, android.Manifest.permission.POST_NOTIFICATIONS
+                        ) != PackageManager.PERMISSION_GRANTED &&
+                        !prefs.getBoolean(AppConstants.PREFS_NOTIFICATION_PERMISSION_ASKED, false)
+                    ) {
+                        showNotificationPermissionRationale = true
                     }
                 }
 
@@ -214,7 +237,7 @@ class MainActivity : ComponentActivity() {
                                     //Menu Toggle Button
                                     BottomBarItem(
                                         icon = if (isMenuExpanded) Icons.Default.Close else Icons.Default.Menu,
-                                        label = "Menu",
+                                        label = stringResource(R.string.bottom_bar_menu),
                                         onClick = {
                                             if (isAutomateExpanded) {
                                                 isAutomateExpanded = false
@@ -255,7 +278,7 @@ class MainActivity : ComponentActivity() {
                                         ) {
                                             Icon(
                                                 imageVector = Icons.Default.Add,
-                                                contentDescription = "Add Device",
+                                                contentDescription = stringResource(R.string.cd_add_device),
                                                 tint = MaterialTheme.colorScheme.onPrimary,
                                                 modifier = Modifier.size(32.dp)
                                             )
@@ -282,7 +305,7 @@ class MainActivity : ComponentActivity() {
                                             tint = MaterialTheme.colorScheme.primary
                                         )
                                         Text(
-                                            text = "Automate",
+                                            text = stringResource(R.string.bottom_bar_automate),
                                             style = MaterialTheme.typography.labelSmall,
                                             color = MaterialTheme.colorScheme.primary
                                         )
@@ -313,7 +336,8 @@ class MainActivity : ComponentActivity() {
                                             sendWakeOnLan(device)
                                             showSentWave = true
                                         }
-                                    }
+                                    },
+                                    onSetDefault = { viewModel.setDefaultDevice(it) }
                                 )
 
                                 if (showAddDialog) { AddDeviceDialog(onDismiss = { showAddDialog = false }, onConfirm = { viewModel.addDevice(it); showAddDialog = false }) }
@@ -366,7 +390,7 @@ class MainActivity : ComponentActivity() {
                                                 .padding(bottom = innerPadding.calculateBottomPadding()),
                                             contentAlignment = Alignment.Center
                                         ) {
-                                            Text("No automations yet", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                            Text(stringResource(R.string.no_automations), color = MaterialTheme.colorScheme.onSurfaceVariant)
                                         }
                                     } else {
                                         LazyColumn(
@@ -399,7 +423,7 @@ class MainActivity : ComponentActivity() {
                                     ) {
                                         Icon(Icons.Default.Build, contentDescription = null, modifier = Modifier.size(16.dp), tint = MaterialTheme.colorScheme.onPrimary)
                                         Spacer(Modifier.width(6.dp))
-                                        Text("Add automation", color = MaterialTheme.colorScheme.onPrimary, style = MaterialTheme.typography.labelMedium)
+                                        Text(stringResource(R.string.add_automation), color = MaterialTheme.colorScheme.onPrimary, style = MaterialTheme.typography.labelMedium)
                                     }
 
                                     if (showAddAutomationDialog) {
@@ -473,7 +497,7 @@ class MainActivity : ComponentActivity() {
                                     ) {
                                         Icon(Icons.Default.Settings, null, tint = MaterialTheme.colorScheme.primary)
                                         Spacer(Modifier.width(8.dp))
-                                        Text("Settings", color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.labelSmall)
+                                        Text(stringResource(R.string.menu_settings), color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.labelSmall)
                                     }
 
                                     Row(
@@ -485,7 +509,7 @@ class MainActivity : ComponentActivity() {
                                     ) {
                                         Icon(Icons.Default.Info, null, tint = MaterialTheme.colorScheme.primary)
                                         Spacer(Modifier.width(8.dp))
-                                        Text("Info", color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.labelSmall)
+                                        Text(stringResource(R.string.menu_info), color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.labelSmall)
                                     }
 
                                     Row(
@@ -497,11 +521,27 @@ class MainActivity : ComponentActivity() {
                                     ) {
                                         Icon(Icons.Default.Help, null, tint = MaterialTheme.colorScheme.primary)
                                         Spacer(Modifier.width(8.dp))
-                                        Text("Help", color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.labelSmall)
+                                        Text(stringResource(R.string.menu_help), color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.labelSmall)
                                     }
                                 }
                             }
                         }
+                    }
+
+                    if (showNotificationPermissionRationale) {
+                        NotificationPermissionDialog(
+                            onConfirm = {
+                                showNotificationPermissionRationale = false
+                                prefs.edit().putBoolean(AppConstants.PREFS_NOTIFICATION_PERMISSION_ASKED, true).apply()
+                                notificationPermissionLauncher.launch(
+                                    android.Manifest.permission.POST_NOTIFICATIONS
+                                )
+                            },
+                            onCancel = {
+                                showNotificationPermissionRationale = false
+                                prefs.edit().putBoolean(AppConstants.PREFS_NOTIFICATION_PERMISSION_ASKED, true).apply()
+                            }
+                        )
                     }
 
                     if (showLocationPermissionRationale) {

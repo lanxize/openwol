@@ -1,3 +1,16 @@
+> [!IMPORTANT]
+> **This is a community fork of [OpenWOL](https://gitlab.com/julien.cardoux/openwol) — 这是社区修改版。**
+>
+> The original project is created and maintained by **Julien Cardoux** on GitLab. This fork is
+> **not affiliated with, nor endorsed by**, the original author.
+> 原项目由 Julien Cardoux 在 GitLab 上创作并维护；本仓库是其社区修改版，与原作者无隶属关系，也未获其背书。
+>
+> **Added in this fork / 本修改版新增：** Quick Settings tile ("control centre" one-tap wake),
+> default-device selection, Simplified Chinese localization, tile vibration feedback, and a
+> few bug fixes. Full details (in Chinese) in [CHANGES.md](./CHANGES.md).
+>
+> Maintained by [@lanxize](https://github.com/lanxize).
+
 <div align="center">
 
 <p><img src="./assets/logo.png" width="200" alt="OpenWOL logo"></p>
@@ -155,6 +168,13 @@ You can also reach out via [GitLab Issues](https://gitlab.com/julien.cardoux/ope
 ## ⚖️ License
 
 OpenWOL is licensed under the [**AGPLv3** (GNU Affero General Public License version 3)](https://www.gnu.org/licenses/agpl-3.0.html).
+
+- **Original work:** Copyright (C) 2026 **Julien Cardoux** — <https://gitlab.com/julien.cardoux/openwol>
+- **Modifications in this fork:** Copyright (C) 2026 **lanxize** — <https://github.com/lanxize/openwol>
+
+Files changed by this fork carry a notice at the top saying so, and
+[CHANGES.md](./CHANGES.md) lists every change together with its date — the "prominent notices"
+AGPL §5(a) asks for. Both the original work and these modifications stay under AGPLv3.
 
 All third party components used in this project are licensed under their own terms.
 

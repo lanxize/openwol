@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">OpenWOL</string>
+
+    <!-- 主界面 / 底栏 -->
+    <string name="bottom_bar_menu">菜单</string>
+    <string name="bottom_bar_automate">自动化</string>
+    <string name="cd_add_device">添加设备</string>
+    <string name="cd_edit">编辑</string>
+    <string name="cd_delete">删除</string>
+
+    <!-- 设备列表 -->
+    <string name="no_devices">还没有添加设备</string>
+    <string name="no_devices_hint">你添加的第一个设备会自动成为默认设备，控制中心快捷开关唤醒的就是它。</string>
+    <string name="packet_sent">唤醒包已发送</string>
+    <string name="local_network_required">需要本地网络</string>
+    <string name="local_network_required_body">唤醒包需要通过 Wi-Fi 或 VPN 才能送达你的设备。</string>
+
+    <!-- 自动化 -->
+    <string name="no_automations">还没有自动化规则</string>
+    <string name="add_automation">添加自动化</string>
+    <string name="automation_ssid">SSID：%1$s</string>
+
+    <!-- 菜单面板 -->
+    <string name="menu_settings">设置</string>
+    <string name="menu_info">关于</string>
+    <string name="menu_help">帮助</string>
+
+    <!-- 通用操作 -->
+    <string name="action_save">保存</string>
+    <string name="action_cancel">取消</string>
+    <string name="action_delete">删除</string>
+    <string name="action_close">关闭</string>
+    <string name="action_ok">确定</string>
+
+    <!-- 帮助弹窗 -->
+    <string name="help_title">帮助</string>
+    <string name="help_bios_title">1. BIOS 设置</string>
+    <string name="help_bios_body">在电脑 BIOS 中开启“Wake on LAN”或“Power On By PCI-E”。</string>
+    <string name="help_windows_title">2. Windows 设置</string>
+    <string name="help_windows_body">打开“设备管理器”→ 网络适配器属性 →“高级”标签页，勾选“允许此设备唤醒计算机”“魔术封包唤醒”和“在 S0ix 电源状态下使用魔术封包唤醒”。</string>
+    <string name="help_linux_title">3. Linux 设置</string>
+    <string name="help_linux_body">这个你应该比我熟。</string>
+    <string name="help_network_title">4. 网络</string>
+    <string name="help_network_body">如果唤不醒，请在 OpenWOL 的“高级设置”中填写电脑的 IP 地址和子网掩码。</string>
+    <string name="help_warning">⚠️ 建议填写具体的 IP 地址，否则唤醒包会发往整个网段。</string>
+
+    <!-- 关于弹窗 -->
+    <string name="info_tagline">一款简洁、开源、注重隐私的 Android 局域网唤醒（Wake-on-LAN）应用。</string>
+    <string name="info_privacy_title">隐私</string>
+    <string name="info_privacy_body">不收集、不存储、不共享任何数据。应用完全离线运行，无需账号，也不需要联网。</string>
+    <string name="info_source_title">源代码</string>
+    <string name="info_libraries_title">使用的开源库</string>
+    <string name="info_library_kotlin">• Kotlin — Apache 2.0（JetBrains）</string>
+    <string name="info_library_compose">• Jetpack Compose — Apache 2.0（Google）</string>
+    <string name="info_library_material">• Material Design 3 / 图标 — Apache 2.0（Google）</string>
+    <string name="info_library_androidx">• AndroidX（Core、Lifecycle、SplashScreen）— Apache 2.0（Google）</string>
+    <string name="info_library_serialization">• kotlinx.serialization — Apache 2.0（JetBrains）</string>
+    <string name="info_library_icons">• Google Fonts 图标 — Apache 2.0（Google）</string>
+    <string name="info_license_title">许可证</string>
+    <!-- 用双引号包裹：否则 aapt 会裁掉结尾空格，中文会连成“基于GNU” -->
+    <string name="info_license_prefix">"OpenWOL 以 "</string>
+    <string name="info_license_link">GNU AGPLv3 许可证</string>
+    <string name="info_license_suffix">发布。</string>
+
+    <!-- 设置弹窗 -->
+    <string name="settings_title">设置</string>
+    <string name="settings_theme">主题</string>
+    <string name="theme_system">跟随系统</string>
+    <string name="theme_light">浅色</string>
+    <string name="theme_dark">深色</string>
+
+    <!-- 位置权限说明 -->
+    <string name="location_permission_title">需要位置权限</string>
+    <string name="location_permission_body_1">自动化功能需要位置权限，但仅用于读取当前 Wi-Fi 的网络名称（SSID），以便在你连接到指定网络时自动唤醒设备。</string>
+    <string name="location_permission_body_2">这是位置权限唯一的用途。我们不会收集、存储或共享任何位置信息。</string>
+    <string name="location_permission_body_3">授权弹出时请选择“始终允许”，这样即使应用在后台也能触发自动化。</string>
+
+    <!-- 首次启动时展示一次的通知权限说明 -->
+    <string name="notification_permission_title">允许发送通知</string>
+    <string name="notification_permission_body_1">控制中心的快捷开关需要在每次点击后告诉你结果：唤醒指令是否已发出、是否还没有可用的设备、或者网络状态是否不对。而在 Android 13 及以上，应用的通知权限一旦关闭，系统会静默丢弃这些提示——偏偏那时正是你在用快捷开关的时候。</string>
+    <string name="notification_permission_body_2">自动化功能的通知（包括那条常驻的服务通知）同样需要这个权限才能显示。</string>
+    <string name="notification_permission_body_3">应用不收集、不存储、不共享任何数据，该权限仅用于在本机显示提示。</string>
+    <string name="notification_permission_confirm">允许</string>
+    <string name="notification_permission_cancel">暂不</string>
+
+    <!-- 删除确认 -->
+    <string name="delete_device_title">删除设备</string>
+    <string name="delete_device_prefix">确定要移除设备“</string>
+    <string name="delete_device_suffix">”吗？此操作无法撤销。</string>
+    <string name="delete_automation_title">删除自动化</string>
+    <string name="delete_automation_prefix">确定要删除自动化“</string>
+    <string name="delete_automation_suffix">”吗？此操作无法撤销。</string>
+
+    <!-- 添加 / 编辑设备 -->
+    <string name="add_device_title">添加设备</string>
+    <string name="edit_device_title">编辑设备</string>
+    <string name="field_name">名称</string>
+    <string name="field_mac">MAC 地址</string>
+    <string name="show_advanced">显示高级设置</string>
+    <string name="field_ip">IP 地址</string>
+    <string name="placeholder_ip">192.168.1.1</string>
+    <string name="field_port">端口</string>
+    <string name="port_default">9（默认）</string>
+    <string name="field_subnet_mask">子网掩码</string>
+    <string name="device_color">设备颜色</string>
+
+    <!-- 添加 / 编辑自动化 -->
+    <string name="add_automation_title">添加自动化</string>
+    <string name="edit_automation_title">编辑自动化</string>
+    <string name="field_ssid">Wi-Fi SSID</string>
+    <string name="field_devices">设备</string>
+    <string name="devices_selected_count">已选择 %1$d 个设备</string>
+    <string name="notify_on_trigger">触发时发送通知</string>
+
+    <!-- 自动化前台服务通知 -->
+    <string name="channel_service_name">自动化服务</string>
+    <string name="channel_automations_name">自动化</string>
+    <string name="service_notification_title">自动化运行中</string>
+    <string name="service_notification_text">正在监听 Wi-Fi 变化</string>
+    <string name="notification_automation_title">自动化已触发</string>
+    <string name="notification_automation_text">“%1$s”在 Wi-Fi“%2$s”上触发了</string>
+
+    <!-- 控制中心快捷开关 -->
+    <string name="tile_label">OpenWOL 唤醒</string>
+    <string name="tile_title">打开“%1$s”</string>
+    <string name="tile_no_device">当前无可用设备</string>
+    <string name="tile_network_error">网络状态错误</string>
+    <string name="tile_packet_sent">开机指令已发送</string>
+</resources>

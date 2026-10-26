@@ -1,3 +1,4 @@
+// Modified by lanxize in 2026-10. See CHANGES.md for details.
 package com.juliencardoux.openwol
 
 import android.app.NotificationManager
@@ -10,6 +11,10 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.wifi.WifiManager
 import android.os.Build
+import android.os.VibrationAttributes
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import kotlinx.serialization.json.Json
@@ -23,6 +28,19 @@ inline fun <reified T> loadJsonList(prefs: SharedPreferences, key: String): List
     } catch (e: Exception) {
         emptyList()
     }
+
+/**
+ * Resolves the device that the Quick Settings tile should wake, straight from storage.
+ *
+ * [WolTileService] runs as its own service instance and never touches [WOLViewModel],
+ * so it reads the persisted list itself. The fallback to the first device covers
+ * lists written before the default flag existed, where nothing would be flagged.
+ */
+fun loadDefaultDevice(context: Context): Device? {
+    val prefs = context.getSharedPreferences(AppConstants.PREFS_NAME, Context.MODE_PRIVATE)
+    val devices = loadJsonList<Device>(prefs, AppConstants.PREFS_DEVICE_LIST)
+    return devices.firstOrNull { it.isDefault } ?: devices.firstOrNull()
+}
 
 /**
  * Checks whether all location permissions required for the Automations feature are granted.
@@ -97,6 +115,49 @@ fun getCurrentSsid(context: Context): String? {
     } catch (e: Exception) { null }
 }
 
+/**
+ * Plays a haptic pattern on the default vibrator.
+ *
+ * [timings] alternates off/on durations in milliseconds and must start with an off
+ * duration, e.g. `longArrayOf(0, 45)` is a single 45 ms buzz.
+ *
+ * The usage hint matters more than it looks. A Quick Settings tile runs while the app has
+ * no visible UI, and the platform drops vibrations from background apps unless the usage
+ * is on its `BACKGROUND_PROCESS_USAGE_ALLOWLIST`
+ * (`VibrationSettings.shouldIgnoreVibration`). The default USAGE_TOUCH is *not* on that
+ * list - it would be logged as `ignored_background` - while USAGE_PHYSICAL_EMULATION is,
+ * and "simulating a physical button press" is exactly what tapping a tile is.
+ *
+ * VIBRATE is a normal permission granted at install, so this needs no prompt and cannot be
+ * revoked by the user - which makes haptics the tile's only guaranteed feedback channel.
+ */
+fun vibrate(context: Context, timings: LongArray) {
+    val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        val manager = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+        manager.defaultVibrator
+    } else {
+        @Suppress("DEPRECATION")
+        context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+    }
+    if (!vibrator.hasVibrator()) return
+
+    when {
+        // The VibrationAttributes overload only exists from API 33.
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> vibrator.vibrate(
+            VibrationEffect.createWaveform(timings, -1),
+            VibrationAttributes.Builder()
+                .setUsage(VibrationAttributes.USAGE_PHYSICAL_EMULATION)
+                .build()
+        )
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ->
+            vibrator.vibrate(VibrationEffect.createWaveform(timings, -1))
+        else -> {
+            @Suppress("DEPRECATION")
+            vibrator.vibrate(timings, -1)
+        }
+    }
+}
+
 fun sendAutomationNotification(context: Context, automationName: String, ssid: String) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
         ContextCompat.checkSelfPermission(context, android.Manifest.permission.POST_NOTIFICATIONS)
@@ -112,8 +173,8 @@ fun sendAutomationNotification(context: Context, automationName: String, ssid: S
     val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     val notification = NotificationCompat.Builder(context, AppConstants.CHANNEL_AUTOMATIONS)
         .setSmallIcon(R.drawable.ic_notification)
-        .setContentTitle("Automation triggered")
-        .setContentText("\"$automationName\" fired on Wi-Fi \"$ssid\"")
+        .setContentTitle(context.getString(R.string.notification_automation_title))
+        .setContentText(context.getString(R.string.notification_automation_text, automationName, ssid))
         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
         .setContentIntent(pendingIntent)
         .setAutoCancel(true)
