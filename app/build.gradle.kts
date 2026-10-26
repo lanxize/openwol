@@ -1,10 +1,22 @@
 // Modified by lanxize in 2026-10. See CHANGES.md for details.
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.compose)
 }
+
+// Release signing material deliberately lives outside this repository (../.keys) so it can
+// never be committed, and so no .gitignore rule is load-bearing for it. When the file is
+// absent the build still succeeds — Gradle just produces app-release-unsigned.apk instead
+// of failing, which keeps a fresh clone buildable.
+val releaseKeystore = Properties().apply {
+    val propsFile = rootProject.file("../.keys/keystore.properties")
+    if (propsFile.exists()) propsFile.inputStream().use { load(it) }
+}
+val hasReleaseKey = releaseKeystore.getProperty("storeFile") != null
 
 android {
     namespace = "com.juliencardoux.openwol"
@@ -37,6 +49,17 @@ android {
         includeInBundle = false
     }
 
+    signingConfigs {
+        if (hasReleaseKey) {
+            create("release") {
+                storeFile = file(releaseKeystore.getProperty("storeFile"))
+                storePassword = releaseKeystore.getProperty("storePassword")
+                keyAlias = releaseKeystore.getProperty("keyAlias")
+                keyPassword = releaseKeystore.getProperty("keyPassword")
+            }
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -45,6 +68,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            if (hasReleaseKey) {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
     }
     compileOptions {
