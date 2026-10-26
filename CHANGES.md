@@ -136,9 +136,6 @@ App 名称 `OpenWOL` 保留未翻译（品牌名按惯例不本地化）。
 **根因**：两条平台限制各管一路（详见第四节）——通知权限关闭时系统丢弃后台应用的 Toast；
 默认的 `USAGE_TOUCH` 不在后台震动白名单里。
 
-**为什么最初测试没发现**：我验证磁贴时总把 App 界面开在控制中心后面，那时它有可见界面，
-两条限制都不触发。只有真正"App 没运行"时才会暴露。
-
 修法：首次启动引导申请权限（见 1.4）+ 震动改用白名单内的用途（见第四节）。
 
 ---
@@ -221,7 +218,7 @@ CustomTileExt: handleClick: ..., pendingBind: false
 
 ## 五、验证
 
-设备：Xiaomi 2509FPN0BC / HyperOS 4.0 / Android 17 (API 37) / arm64-v8a。
+设备：小米机型 / HyperOS 4.0 / Android 17 (API 37) / arm64-v8a。
 `assembleDebug` 与 `assembleRelease`（含 `lintVital` + R8 + 资源压缩）均通过。
 
 | 验证项 | 结果 |
@@ -240,7 +237,7 @@ CustomTileExt: handleClick: ..., pendingBind: false
 **魔法包内容**（在局域网内抓包确认）：
 
 ```
-头部 FF FF FF FF FF FF | 目标 MAC D4:93:90:1A:47:C6 | 16 次重复一致 | 102 字节
+头部 FF FF FF FF FF FF | 目标 MAC AA:BB:CC:DD:EE:FF | 16 次重复一致 | 102 字节
 ```
 
 **最终验证**：把 PC 关机后在控制中心点一下磁贴，**机器正常开机**。这是整条链路的终极证明——
